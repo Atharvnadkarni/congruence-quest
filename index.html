@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congruence Quest | Atharv Tech Labs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            touch-action: none;
+            overflow: hidden;
+            background-color: #0f172a;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            border-bottom: 2px solid #334155;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .control-panel {
+            height: 60vh;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: #0f172a;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: #a855f7;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -10px;
+            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+ 
+    <!-- Title Screen -->
+    <div id="titleScreen" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center p-6 text-center">
+        <div class="mb-8 space-y-2">
+            <h1 class="text-4xl font-black tracking-tighter text-white uppercase">CONGRUENCE <span class="text-purple-500">QUEST</span></h1>
+            <p class="text-slate-400 text-sm tracking-widest uppercase">The Superposition Challenge</p>
+        </div>
+ 
+        <div class="glass-panel p-6 rounded-3xl max-w-sm mb-12 space-y-4">
+            <p class="text-sm text-slate-300 leading-relaxed">
+                Superposition is the ultimate test. Use Rigid Motion (Slide, Spin, Flip) to prove triangles are identical.
+            </p>
+            <div class="flex flex-col gap-2 text-xs font-bold text-left">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> Align vertices carefully</div>
+                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-red-500 rounded-full"></div> Detect "Advanced" Red Herrings</div>
+                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green-500 rounded-full"></div> Earn points for accuracy</div>
+            </div>
+        </div>
+ 
+        <button onclick="startGame()" class="px-12 py-4 bg-purple-600 hover:bg-purple-500 text-white font-black rounded-2xl shadow-xl shadow-purple-900/20 transition-all active:scale-95 mb-8">
+            START QUEST
+        </button>
+ 
+        <div class="mt-auto pb-4">
+            <p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase">© Atharv Tech Labs</p>
+        </div>
+    </div>
+ 
+    <!-- Game UI -->
+    <div id="gameContainer" class="hidden">
+        <div class="canvas-container" id="canvasWrapper">
+            <canvas id="gameCanvas"></canvas>
+ 
+            <!-- HUD -->
+            <div class="absolute top-4 left-4 flex flex-col gap-2">
+                <div class="flex gap-2">
+                    <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        Lvl <span id="levelDisplay" class="text-purple-400">1</span>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        Score: <span id="scoreDisplay" class="text-yellow-400">0</span>
+                    </div>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400 w-fit">
+                    Match: <span id="matchPercent" class="text-blue-400">0%</span>
+                </div>
+            </div>
+ 
+            <!-- Result Overlay -->
+            <div id="resultOverlay" class="absolute inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden z-50">
+                <div class="text-center p-8 glass-panel rounded-3xl shadow-2xl max-w-xs w-full">
+                    <div id="resultIcon" class="mb-4 text-5xl">✨</div>
+                    <h2 id="resultTitle" class="text-2xl font-black mb-2">SUCCESS!</h2>
+                    <p id="resultText" class="text-slate-400 text-sm mb-4 leading-relaxed">You correctly identified the triangles.</p>
+                    <p id="pointsAwarded" class="text-yellow-400 font-black text-xl mb-6 uppercase tracking-widest">+100 PTS</p>
+                    <button onclick="nextLevel()" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-2xl font-black transition-all active:scale-95 shadow-lg shadow-purple-900/20 uppercase tracking-widest">Continue</button>
+                </div>
+            </div>
+        </div>
+ 
+        <div class="control-panel">
+            <div class="max-w-xl mx-auto w-full space-y-6">
+                <!-- Transformation Sliders -->
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-end">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Translate (Slide)</label>
+                            <span class="text-xs font-mono text-purple-400" id="slideVal">0%</span>
+                        </div>
+                        <input type="range" id="superSlider" min="0" max="100" value="0" step="0.1" oninput="updateControls()">
+                    </div>
+ 
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-end">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Rotate (Spin)</label>
+                            <span class="text-xs font-mono text-purple-400" id="rotVal">0°</span>
+                        </div>
+                        <input type="range" id="rotSlider" min="0" max="360" value="0" step="1" oninput="updateControls()">
+                    </div>
+                </div>
+ 
+                <!-- Actions -->
+                <div class="flex flex-col gap-3">
+                    <button onclick="flipPlayer()" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-2xl border border-slate-700 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="m15 18-6-6 6-6"/><path d="M9 12h12"/></svg>
+                        <span class="text-[10px] font-black uppercase tracking-widest">Reflect Triangle</span>
+                    </button>
+ 
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="confirmBtn" onclick="handleConfirm()" class="bg-white text-slate-900 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                            Confirm Congruent
+                        </button>
+                        <button id="rejectBtn" onclick="handleReject()" class="bg-red-500/10 hover:bg-red-500/20 py-4 rounded-2xl border border-red-500/50 font-black text-[10px] uppercase tracking-widest text-red-500 active:scale-95 transition-all">
+                            Not Congruent
+                        </button>
+                    </div>
+                </div>
+ 
+                <div class="pt-4 border-t border-slate-800 text-center">
+                    <p id="hintText" class="text-[9px] text-slate-600 uppercase font-bold tracking-widest mb-4">
+                        PROVE CONGRUENCE THROUGH RIGID MOTION
+                    </p>
+                    <p class="text-[8px] text-slate-700 font-bold uppercase tracking-[0.3em]">Atharv Tech Labs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrapper');
+        const superSlider = document.getElementById('superSlider');
+        const rotSlider = document.getElementById('rotSlider');
+        const resultOverlay = document.getElementById('resultOverlay');
+ 
+        let level = 1;
+        let totalScore = 0;
+        let isComplete = false;
+        let isPossible = true;
+        let failMode = null; 
+ 
+        let horizonY = 0;
+        let startX = 0;
+        let endX = 0;
+ 
+        let target = { rotation: 0, scaleX: 1, points: [] };
+        let player = { rotation: 0, scaleX: 1, currentX: 0, points: [] };
+ 
+        function startGame() {
+            document.getElementById('titleScreen').classList.add('hidden');
+            document.getElementById('gameContainer').classList.remove('hidden');
+            resize();
+        }
+ 
+        function resize() {
+            if (document.getElementById('gameContainer').classList.contains('hidden')) return;
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+            horizonY = canvas.height / 2;
+            startX = canvas.width * 0.25;
+            endX = canvas.width * 0.75;
+            initLevel();
+        }
+ 
+        window.addEventListener('resize', resize);
+ 
+        function initLevel() {
+            isComplete = false;
+            isPossible = Math.random() > 0.45; 
+            failMode = isPossible ? null : Math.floor(Math.random() * 3);
+ 
+            superSlider.value = 0;
+            rotSlider.value = 0;
+            superSlider.disabled = false;
+            rotSlider.disabled = false;
+            resultOverlay.classList.add('hidden');
+ 
+            document.getElementById('levelDisplay').innerText = level;
+            document.getElementById('scoreDisplay').innerText = totalScore;
+            document.getElementById('matchPercent').innerText = "0%";
+            document.getElementById('matchPercent').className = "text-blue-400";
+            document.getElementById('hintText').innerText = "PROVE CONGRUENCE THROUGH RIGID MOTION";
+            document.getElementById('hintText').className = "text-[9px] text-center text-slate-600 uppercase tracking-widest";
+ 
+            const size = Math.min(canvas.width, canvas.height) * 0.16;
+ 
+            const basePoints = [
+                { x: -size, y: -size/2 },
+                { x: size, y: -size/2 },
+                { x: (Math.random() - 0.5) * size * 1.8, y: size }
+            ];
+ 
+            player.points = JSON.parse(JSON.stringify(basePoints));
+            player.rotation = 0;
+            player.scaleX = 1;
+            player.currentX = startX;
+ 
+            if (isPossible) {
+                target.points = JSON.parse(JSON.stringify(basePoints));
+            } else {
+                target.points = JSON.parse(JSON.stringify(basePoints));
+                if (failMode === 0) {
+                    const s = Math.random() > 0.5 ? 1.15 : 0.85;
+                    target.points.forEach(p => { p.x *= s; p.y *= s; });
+                } else if (failMode === 1) {
+                    const s = Math.random() > 0.5 ? 1.2 : 0.8;
+                    target.points.forEach(p => { p.x *= s; });
+                } else {
+                    const vertexIndex = Math.floor(Math.random() * 3);
+                    target.points[vertexIndex].x += (Math.random() - 0.5) * size * 0.4;
+                    target.points[vertexIndex].y += (Math.random() - 0.5) * size * 0.4;
+                }
+            }
+ 
+            target.rotation = Math.floor(Math.random() * 360); 
+            target.scaleX = Math.random() > 0.5 ? 1 : -1;
+ 
+            updateLabelUI();
+            draw();
+        }
+ 
+        function updateControls() {
+            if (isComplete) return;
+            player.currentX = startX + (parseFloat(superSlider.value) / 100) * (endX - startX);
+            player.rotation = parseFloat(rotSlider.value);
+            updateLabelUI();
+            updateMatchUI(calculateMatchScore());
+        }
+ 
+        function updateLabelUI() {
+            document.getElementById('slideVal').innerText = Math.round(superSlider.value) + "%";
+            document.getElementById('rotVal').innerText = Math.round(rotSlider.value) + "°";
+        }
+ 
+        function flipPlayer() {
+            if (isComplete) return;
+            player.scaleX *= -1;
+            updateMatchUI(calculateMatchScore());
+        }
+ 
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+ 
+            ctx.beginPath();
+            ctx.setLineDash([4, 12]);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.moveTo(0, horizonY);
+            ctx.lineTo(canvas.width, horizonY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+ 
+            drawTriangle(endX, horizonY, target.rotation, target.scaleX, target.points, true);
+            drawTriangle(player.currentX, horizonY, player.rotation, player.scaleX, player.points, false);
+ 
+            if (!isComplete) requestAnimationFrame(draw);
+        }
+ 
+        function drawTriangle(x, y, rot, scaleX, pts, isTarget) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rot * Math.PI / 180);
+            ctx.scale(scaleX, 1);
+ 
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            ctx.lineTo(pts[1].x, pts[1].y);
+            ctx.lineTo(pts[2].x, pts[2].y);
+            ctx.closePath();
+ 
+            if (isTarget) {
+                ctx.strokeStyle = '#3b82f6';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.03)';
+                ctx.fill();
+ 
+                const currentScore = calculateMatchScore();
+                if (currentScore > 85) {
+                    ctx.font = 'bold 9px monospace';
+                    ctx.fillStyle = '#64748b';
+                    ctx.textAlign = 'center';
+                    pts.forEach((p, i) => {
+                        const nextP = pts[(i+1)%3];
+                        const midX = (p.x + nextP.x) / 2;
+                        const midY = (p.y + nextP.y) / 2;
+                        const length = Math.sqrt(Math.pow(p.x - nextP.x, 2) + Math.pow(p.y - nextP.y, 2));
+                        ctx.fillText(Math.round(length), midX, midY - 5);
+                    });
+                }
+ 
+            } else {
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.6)';
+                ctx.fill();
+                ctx.strokeStyle = '#d8b4fe';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                if (isComplete) {
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#4ade80';
+                    ctx.strokeStyle = '#4ade80';
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+ 
+        function calculateMatchScore() {
+            const dist = Math.abs(player.currentX - endX);
+            const rotDiff = Math.min(Math.abs(player.rotation - target.rotation), 360 - Math.abs(player.rotation - target.rotation));
+            const flipMatch = player.scaleX === target.scaleX;
+ 
+            const dScore = Math.max(0, 100 - (dist / 1.5));
+            const rScore = Math.max(0, 100 - (rotDiff * 1.5));
+            let total = (dScore + rScore) / 2;
+            if (!flipMatch) total = Math.min(total, 40);
+ 
+            if (!isPossible && total > 88) total = 88 + (Math.random() * 2);
+ 
+            return Math.min(100, total);
+        }
+ 
+        function updateMatchUI(score) {
+            const displayScore = Math.round(score);
+            const el = document.getElementById('matchPercent');
+            el.innerText = displayScore + "%";
+            el.className = displayScore > 92 ? "text-green-400" : "text-blue-400";
+        }
+ 
+        function handleConfirm() {
+            if (isComplete) return;
+            const dist = Math.abs(player.currentX - endX);
+            const rotDiff = Math.min(Math.abs(player.rotation - target.rotation), 360 - Math.abs(player.rotation - target.rotation));
+            const flipMatch = player.scaleX === target.scaleX;
+ 
+            if (isPossible && dist < 12 && rotDiff < 6 && flipMatch) {
+                const points = 100;
+                totalScore += points;
+                showResult(true, "CONGRUENT!", "Perfect superposition achieved. The triangles are identical!", "✨", points);
+            } else {
+                shakeUI('confirmBtn');
+                if (!isPossible) updateHint("The vertices won't line up. Is this a red herring?", "text-red-400");
+                else if (!flipMatch) updateHint("Reflection required! Try flipping the triangle.", "text-blue-400");
+                else updateHint("Alignment error. Fine-tune the sliders.", "text-yellow-400");
+            }
+        }
+ 
+        function handleReject() {
+            if (isComplete) return;
+            if (!isPossible) {
+                const points = 150; // More points for harder red herrings
+                totalScore += points;
+                showResult(true, "SHARP EYE!", "Correct! You spotted the advanced red herring. Not congruent!", "🔍", points);
+            } else {
+                shakeUI('rejectBtn');
+                updateHint("Investigation failed! These triangles are congruent. Keep adjusting!", "text-yellow-400");
+            }
+        }
+ 
+        function shakeUI(id) {
+            const btn = document.getElementById(id);
+            btn.classList.add('shake');
+            setTimeout(() => btn.classList.remove('shake'), 500);
+        }
+ 
+        function updateHint(txt, colorClass) {
+            const hint = document.getElementById('hintText');
+            hint.innerText = txt;
+            hint.className = `text-[9px] text-center uppercase font-bold px-2 ${colorClass}`;
+        }
+ 
+        function showResult(success, title, text, icon, pts) {
+            isComplete = true;
+            document.getElementById('resultTitle').innerText = title;
+            document.getElementById('resultText').innerText = text;
+            document.getElementById('resultIcon').innerText = icon;
+            document.getElementById('pointsAwarded').innerText = "+" + pts + " PTS";
+            resultOverlay.classList.remove('hidden');
+ 
+            if (isPossible) {
+                player.currentX = endX;
+                player.rotation = target.rotation;
+                player.scaleX = target.scaleX;
+                document.getElementById('matchPercent').innerText = "100%";
+            } else {
+                document.getElementById('matchPercent').innerText = "FALSE";
+            }
+ 
+            superSlider.disabled = true;
+            rotSlider.disabled = true;
+            draw();
+        }
+ 
+        function nextLevel() {
+            level++;
+            initLevel();
+        }
+    </script>
+</body>
+</html>
+ 
+ 
