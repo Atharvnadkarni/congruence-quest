@@ -9,29 +9,54 @@
         body {
             touch-action: none;
             overflow: hidden;
-            background-color: #0f172a;
+            background-color: #020617;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 40vh;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            border-bottom: 2px solid #334155;
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
         }
+        
+        @media (min-width: 1024px) {
+            .app-container {
+                flex-direction: row;
+            }
+            .canvas-section {
+                flex: 1;
+                height: 100vh !important;
+            }
+            .control-section {
+                width: 420px !important;
+                height: 100vh !important;
+                border-left: 1px solid #1e293b;
+            }
+        }
+
+        .canvas-section {
+            position: relative;
+            height: 35vh;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            overflow: hidden;
+        }
+
+        .control-section {
+            height: 65vh;
+            background: #0b1120;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
         canvas {
             display: block;
             width: 100%;
             height: 100%;
         }
-        .control-panel {
-            height: 60vh;
-            padding: 1.25rem;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            background: #0f172a;
-        }
+
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -39,22 +64,29 @@
         }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
-            height: 8px;
+            height: 6px;
             cursor: pointer;
-            background: #334155;
-            border-radius: 4px;
+            background: #1e293b;
+            border-radius: 3px;
         }
         input[type=range]::-webkit-slider-thumb {
-            height: 28px;
-            width: 28px;
+            height: 24px;
+            width: 24px;
             border-radius: 50%;
             background: #a855f7;
             cursor: pointer;
             -webkit-appearance: none;
-            margin-top: -10px;
-            border: 2px solid white;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            margin-top: -9px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
         }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         .shake {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -64,395 +96,568 @@
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .mode-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
     </style>
 </head>
-<body class="text-slate-100">
- 
+<body class="text-slate-200">
+
     <!-- Title Screen -->
-    <div id="titleScreen" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center p-6 text-center">
-        <div class="mb-8 space-y-2">
-            <h1 class="text-4xl font-black tracking-tighter text-white uppercase">CONGRUENCE <span class="text-purple-500">QUEST</span></h1>
-            <p class="text-slate-400 text-sm tracking-widest uppercase">The Superposition Challenge</p>
+    <div id="titleScreen" class="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center p-8 text-center overflow-y-auto">
+        <div class="mb-6 space-y-4 max-w-2xl">
+            <h1 class="text-4xl lg:text-6xl font-black tracking-tighter text-white uppercase italic text-center">
+                CONGRUENCE <span class="text-purple-500 not-italic">QUEST</span>
+            </h1>
+            <p class="text-slate-400 text-xs tracking-[0.4em] uppercase font-light text-center">Atharv Nadkarni Geometry Series</p>
         </div>
- 
-        <div class="glass-panel p-6 rounded-3xl max-w-sm mb-12 space-y-4">
-            <p class="text-sm text-slate-300 leading-relaxed">
-                Superposition is the ultimate test. Use Rigid Motion (Slide, Spin, Flip) to prove triangles are identical.
+        
+        <div class="glass-card p-6 rounded-[2rem] max-w-lg mb-8 space-y-4 shadow-2xl border border-white/5 text-center">
+            <p class="text-xs lg:text-sm text-slate-400 leading-relaxed text-center">
+                Prove triangles are identical through 20 levels. Build them using <b>SSS, SAS, ASA, AAS, and RHS</b> postulates or test your skills in <b>Rigid Motion</b>.
             </p>
-            <div class="flex flex-col gap-2 text-xs font-bold text-left">
-                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> Align vertices carefully</div>
-                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-red-500 rounded-full"></div> Detect "Advanced" Red Herrings</div>
-                <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green-500 rounded-full"></div> Earn points for accuracy</div>
+            <div class="grid grid-cols-2 gap-4 text-[10px] lg:text-xs font-semibold text-left border-t border-slate-800 pt-4">
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-purple-500 rounded-full"></span> <b>QUEST:</b> Rigid Motion</div>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-blue-500 rounded-full"></span> <b>SSS:</b> 3 Side construction</div>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span> <b>SAS:</b> Side-Angle-Side</div>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-pink-500 rounded-full"></span> <b>ASA:</b> Angle-Side-Angle</div>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-orange-500 rounded-full"></span> <b>AAS:</b> Angle-Angle-Side</div>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-red-500 rounded-full"></span> <b>RHS:</b> Right-Hyp-Side</div>
             </div>
         </div>
- 
-        <button onclick="startGame()" class="px-12 py-4 bg-purple-600 hover:bg-purple-500 text-white font-black rounded-2xl shadow-xl shadow-purple-900/20 transition-all active:scale-95 mb-8">
-            START QUEST
-        </button>
- 
-        <div class="mt-auto pb-4">
-            <p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase">© Atharv Nadkarni</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-white">
+            <button onclick="startGame('QUEST', 'normal')" class="mode-btn px-6 py-4 bg-purple-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">Rigid Motion (Normal)</button>
+            <button onclick="startGame('QUEST', 'hard')" class="mode-btn px-6 py-4 bg-slate-800 border border-slate-700 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">Rigid Motion (Hard)</button>
+            <button onclick="startGame('SSS', 'normal')" class="mode-btn px-6 py-4 bg-blue-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">SSS construction</button>
+            <button onclick="startGame('SAS', 'normal')" class="mode-btn px-6 py-4 bg-indigo-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">SAS construction</button>
+            <button onclick="startGame('ASA', 'normal')" class="mode-btn px-6 py-4 bg-pink-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">ASA construction</button>
+            <button onclick="startGame('AAS', 'normal')" class="mode-btn px-6 py-4 bg-orange-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">AAS Construction</button>
+            <button onclick="startGame('RHS', 'normal')" class="mode-btn px-6 py-4 bg-red-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px] sm:col-span-2">RHS Right-Angle Mode</button>
+        </div>
+
+        <div class="mt-8 text-center">
+            <p class="text-[10px] text-slate-700 font-bold tracking-[0.3em] uppercase">© Atharv Nadkarni</p>
         </div>
     </div>
- 
-    <!-- Game UI -->
-    <div id="gameContainer" class="hidden">
-        <div class="canvas-container" id="canvasWrapper">
+
+    <!-- Result Overlay -->
+    <div id="resultOverlay" class="fixed inset-0 flex items-center justify-center bg-slate-950/90 backdrop-blur-md hidden z-[150] p-6 text-white text-center">
+        <div class="text-center p-10 glass-card rounded-[2.5rem] shadow-2xl max-w-sm w-full border border-white/10">
+            <div id="resultIcon" class="mb-6 text-6xl transform scale-125">✨</div>
+            <h2 id="resultTitle" class="text-3xl font-black mb-3 tracking-tight uppercase">Success!</h2>
+            <p id="resultText" class="text-slate-400 text-sm mb-6 leading-relaxed">Verification successful.</p>
+            <div id="pointsAwarded" class="text-yellow-400 font-black text-2xl mb-8 tracking-tighter uppercase">+100 XP</div>
+            <button id="overlayActionBtn" onclick="closeResultOverlay()" class="w-full bg-purple-600 hover:bg-purple-500 py-5 rounded-2xl font-black transition-all active:scale-95 shadow-xl shadow-purple-900/30 uppercase tracking-[0.2em] text-sm">Next Level</button>
+        </div>
+    </div>
+
+    <!-- Gameplay -->
+    <div id="gameContainer" class="hidden app-container">
+        <div class="canvas-section" id="canvasWrapper">
             <canvas id="gameCanvas"></canvas>
- 
-            <!-- HUD -->
-            <div class="absolute top-4 left-4 flex flex-col gap-2">
-                <div class="flex gap-2">
-                    <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                        Lvl <span id="levelDisplay" class="text-purple-400">1</span>
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col gap-2 items-center w-full px-4">
+                <div class="flex gap-2 items-center flex-wrap justify-center">
+                    <button onclick="resetApp()" class="glass-card p-2 rounded-xl hover:bg-white/10 transition-all active:scale-95 group shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-white transition-colors">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="glass-card px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-300">
+                        LVL <span id="levelDisplay" class="text-purple-400 ml-1">1</span>/20
                     </div>
-                    <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                        Score: <span id="scoreDisplay" class="text-yellow-400">0</span>
+                    <div class="glass-card px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-300">
+                        XP <span id="scoreDisplay" class="text-yellow-400 ml-1">0</span>
                     </div>
-                </div>
-                <div class="bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400 w-fit">
-                    Match: <span id="matchPercent" class="text-blue-400">0%</span>
-                </div>
-            </div>
- 
-            <!-- Result Overlay -->
-            <div id="resultOverlay" class="absolute inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden z-50">
-                <div class="text-center p-8 glass-panel rounded-3xl shadow-2xl max-w-xs w-full">
-                    <div id="resultIcon" class="mb-4 text-5xl">✨</div>
-                    <h2 id="resultTitle" class="text-2xl font-black mb-2">SUCCESS!</h2>
-                    <p id="resultText" class="text-slate-400 text-sm mb-4 leading-relaxed">You correctly identified the triangles.</p>
-                    <p id="pointsAwarded" class="text-yellow-400 font-black text-xl mb-6 uppercase tracking-widest">+100 PTS</p>
-                    <button onclick="nextLevel()" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-2xl font-black transition-all active:scale-95 shadow-lg shadow-purple-900/20 uppercase tracking-widest">Continue</button>
+                    <div class="glass-card px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-300">
+                        STRIKES <span id="livesDisplay" class="flex">❤️❤️❤️</span>
+                    </div>
+                    <div id="matchHUD" class="glass-card px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-300">
+                        MATCH <span id="matchPercent" class="text-blue-400 ml-2">0%</span>
+                    </div>
                 </div>
             </div>
         </div>
- 
-        <div class="control-panel">
-            <div class="max-w-xl mx-auto w-full space-y-6">
-                <!-- Transformation Sliders -->
-                <div class="space-y-4">
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-end">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Translate (Slide)</label>
-                            <span class="text-xs font-mono text-purple-400" id="slideVal">0%</span>
-                        </div>
-                        <input type="range" id="superSlider" min="0" max="100" value="0" step="0.1" oninput="updateControls()">
+
+        <div class="control-section">
+            <div class="p-8 lg:p-10 flex flex-col h-full">
+                <div class="mb-8 flex items-center justify-between">
+                    <div>
+                        <h2 id="modeTitle" class="text-xl font-black text-white tracking-tight uppercase italic">Command Center</h2>
+                        <div class="h-1 w-12 bg-purple-600 mt-2 rounded-full"></div>
                     </div>
- 
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-end">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Rotate (Spin)</label>
-                            <span class="text-xs font-mono text-purple-400" id="rotVal">0°</span>
-                        </div>
-                        <input type="range" id="rotSlider" min="0" max="360" value="0" step="1" oninput="updateControls()">
-                    </div>
+                    <div id="modeBadge" class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-purple-500/30">QUEST</div>
                 </div>
- 
-                <!-- Actions -->
-                <div class="flex flex-col gap-3">
-                    <button onclick="flipPlayer()" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-2xl border border-slate-700 transition-all active:scale-95 flex items-center justify-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="m15 18-6-6 6-6"/><path d="M9 12h12"/></svg>
-                        <span class="text-[10px] font-black uppercase tracking-widest">Reflect Triangle</span>
-                    </button>
- 
-                    <div class="grid grid-cols-2 gap-3">
-                        <button id="confirmBtn" onclick="handleConfirm()" class="bg-white text-slate-900 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
-                            Confirm Congruent
-                        </button>
-                        <button id="rejectBtn" onclick="handleReject()" class="bg-red-500/10 hover:bg-red-500/20 py-4 rounded-2xl border border-red-500/50 font-black text-[10px] uppercase tracking-widest text-red-500 active:scale-95 transition-all">
-                            Not Congruent
-                        </button>
+
+                <div class="space-y-8 flex-1">
+                    <div id="questControls" class="space-y-8">
+                        <div class="space-y-6">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Linear Translation</label>
+                                    <span class="text-xs font-mono text-purple-400" id="slideVal">0%</span>
+                                </div>
+                                <input type="range" id="superSlider" min="0" max="100" value="0" step="0.1" oninput="updateControls()">
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Orbital Rotation</label>
+                                    <span class="text-xs font-mono text-purple-400" id="rotVal">0°</span>
+                                </div>
+                                <input type="range" id="rotSlider" min="0" max="360" value="0" step="1" oninput="updateControls()">
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <button onclick="flipPlayer()" class="w-full bg-slate-800 py-4 rounded-xl border border-slate-700 font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all text-white">Reflect Triangle</button>
+                            <div class="grid grid-cols-2 gap-3 text-center">
+                                <button id="confirmBtn" onclick="handleConfirm()" class="bg-white text-slate-900 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all text-center">Confirm Match</button>
+                                <button id="rejectBtn" onclick="handleReject()" class="bg-red-900/20 text-red-500 border border-red-500/20 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all text-center">Reject Pair</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
- 
-                <div class="pt-4 border-t border-slate-800 text-center">
-                    <p id="hintText" class="text-[9px] text-slate-600 uppercase font-bold tracking-widest mb-4">
-                        PROVE CONGRUENCE THROUGH RIGID MOTION
-                    </p>
-                    <p class="text-[8px] text-slate-700 font-bold uppercase tracking-[0.3em]">Atharv Nadkarni</p>
+
+                    <div id="constructControls" class="hidden space-y-6">
+                        <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 text-center">
+                            <h3 id="constTaskTitle" class="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] mb-2">Step 1: Set Geometry</h3>
+                            <p id="constTaskDesc" class="text-[11px] text-slate-400 leading-relaxed">Adjust your part to match the target's geometry.</p>
+                        </div>
+                        <div class="space-y-6">
+                            <div id="constSlider1Group" class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <label id="constLabel1" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Part A</label>
+                                    <span class="text-xs font-mono text-purple-400" id="constVal1">0</span>
+                                </div>
+                                <input type="range" id="constSlider1" min="10" max="750" value="100" step="1" oninput="updateConstruction()">
+                            </div>
+                            <div id="constSlider2Group" class="space-y-3 hidden">
+                                <div class="flex justify-between items-center">
+                                    <label id="constLabel2" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Part B</label>
+                                    <span class="text-xs font-mono text-purple-400" id="constVal2">0</span>
+                                </div>
+                                <input type="range" id="constSlider2" min="10" max="750" value="100" step="1" oninput="updateConstruction()">
+                            </div>
+                            <div id="constSlider3Group" class="space-y-3 hidden">
+                                <div class="flex justify-between items-center">
+                                    <label id="constLabel3" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Part C</label>
+                                    <span class="text-xs font-mono text-purple-400" id="constVal3">0</span>
+                                </div>
+                                <input type="range" id="constSlider3" min="10" max="750" value="100" step="1" oninput="updateConstruction()">
+                            </div>
+                        </div>
+                        <button id="constActionBtn" onclick="handleConstructionAction()" class="w-full bg-purple-600 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all text-white">LOCK COMPONENT</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
- 
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('canvasWrapper');
         const superSlider = document.getElementById('superSlider');
         const rotSlider = document.getElementById('rotSlider');
+        const constSlider1 = document.getElementById('constSlider1');
+        const constSlider2 = document.getElementById('constSlider2');
+        const constSlider3 = document.getElementById('constSlider3');
         const resultOverlay = document.getElementById('resultOverlay');
- 
-        let level = 1;
-        let totalScore = 0;
-        let isComplete = false;
-        let isPossible = true;
-        let failMode = null; 
- 
-        let horizonY = 0;
-        let startX = 0;
-        let endX = 0;
- 
-        let target = { rotation: 0, scaleX: 1, points: [] };
-        let player = { rotation: 0, scaleX: 1, currentX: 0, points: [] };
- 
-        function startGame() {
-            document.getElementById('titleScreen').classList.add('hidden');
+
+        let level = 1, totalScore = 0, strikes = 0;
+        let isComplete = false, isAnimating = false, isPossible = true;
+        let currentMode = 'QUEST', currentDifficulty = 'normal', constStep = 0; 
+        
+        let p1Val = 100, p2Val = 100, p3Val = 100;
+        let targetP1 = 0, targetP2 = 0, targetP3 = 0;
+        let horizonY = 0, startX = 0, endX = 0;
+
+        let animProgress = 0, animStartPose = { x: 0, rot: 0, sx: 1, sy: 1 };
+        let target = { x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, points: [] };
+        let player = { x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, currentX: 0, points: [] };
+
+        function startGame(mode, difficulty) {
+            currentMode = mode; currentDifficulty = difficulty;
+            document.getElementById('titleScreen').style.display = 'none';
             document.getElementById('gameContainer').classList.remove('hidden');
-            resize();
+            level = 1; totalScore = 0; strikes = 0; resize();
         }
- 
+
+        function resetApp() { 
+            document.getElementById('titleScreen').style.display = 'flex';
+            document.getElementById('gameContainer').classList.add('hidden');
+            isAnimating = false; isComplete = false;
+        }
+
         function resize() {
             if (document.getElementById('gameContainer').classList.contains('hidden')) return;
-            canvas.width = wrapper.clientWidth;
-            canvas.height = wrapper.clientHeight;
-            horizonY = canvas.height / 2;
-            startX = canvas.width * 0.25;
+            canvas.width = wrapper.clientWidth; canvas.height = wrapper.clientHeight;
+            horizonY = canvas.height * 0.7; // Lowered baseline to clear HUD
+            startX = canvas.width * 0.3; // Shift right to clear HUD
             endX = canvas.width * 0.75;
             initLevel();
         }
- 
+
         window.addEventListener('resize', resize);
- 
+
         function initLevel() {
-            isComplete = false;
-            isPossible = Math.random() > 0.45; 
-            failMode = isPossible ? null : Math.floor(Math.random() * 3);
- 
-            superSlider.value = 0;
-            rotSlider.value = 0;
-            superSlider.disabled = false;
-            rotSlider.disabled = false;
+            isComplete = false; isAnimating = false; animProgress = 0;
             resultOverlay.classList.add('hidden');
- 
+            const badge = document.getElementById('modeBadge');
+            const matchHUD = document.getElementById('matchHUD');
+            const qUI = document.getElementById('questControls');
+            const cUI = document.getElementById('constructControls');
+
+            badge.innerText = currentMode;
+            if (currentMode === 'QUEST') {
+                qUI.classList.remove('hidden'); cUI.classList.add('hidden');
+                matchHUD.classList.toggle('hidden', currentDifficulty === 'hard');
+                initQuestLevel();
+            } else {
+                qUI.classList.add('hidden'); cUI.classList.remove('hidden'); matchHUD.classList.add('hidden');
+                initConstructLevel();
+            }
             document.getElementById('levelDisplay').innerText = level;
             document.getElementById('scoreDisplay').innerText = totalScore;
-            document.getElementById('matchPercent').innerText = "0%";
-            document.getElementById('matchPercent').className = "text-blue-400";
-            document.getElementById('hintText').innerText = "PROVE CONGRUENCE THROUGH RIGID MOTION";
-            document.getElementById('hintText').className = "text-[9px] text-center text-slate-600 uppercase tracking-widest";
- 
-            const size = Math.min(canvas.width, canvas.height) * 0.16;
- 
-            const basePoints = [
-                { x: -size, y: -size/2 },
-                { x: size, y: -size/2 },
-                { x: (Math.random() - 0.5) * size * 1.8, y: size }
-            ];
- 
-            player.points = JSON.parse(JSON.stringify(basePoints));
-            player.rotation = 0;
-            player.scaleX = 1;
+            updateLivesUI(); draw();
+        }
+
+        function initQuestLevel() {
+            isPossible = Math.random() > 0.4;
+            superSlider.value = 0; rotSlider.value = 0;
+            const size = Math.min(canvas.width, canvas.height) * 0.22;
+            const base = genTri(size, level);
+            player.points = base;
+            player.rotation = 0; player.scaleX = 1; player.scaleY = 1; player.currentX = startX;
+            target.points = isPossible ? base : distort(base, size, level);
+            setTargetPose(level);
+            updateLabels();
+        }
+
+        function initConstructLevel() {
+            constStep = 0; 
+            p1Val = 100; p2Val = 100; p3Val = 100;
+            constSlider1.value = 100; constSlider2.value = 100; constSlider3.value = 100;
+            
+            document.getElementById('constSlider1Group').classList.remove('hidden');
+            document.getElementById('constSlider2Group').classList.add('hidden');
+            document.getElementById('constSlider3Group').classList.add('hidden');
+            
+            const scaleMult = currentMode === 'SSS' ? 0.38 : 0.25;
+            const size = Math.min(canvas.width, canvas.height) * (scaleMult + (level / 100));
+            const base = genTri(size, level);
+            target.points = base; target.rotation = 0; target.scaleX = 1; target.scaleY = 1; 
+            target.x = endX; target.y = horizonY;
             player.currentX = startX;
- 
-            if (isPossible) {
-                target.points = JSON.parse(JSON.stringify(basePoints));
-            } else {
-                target.points = JSON.parse(JSON.stringify(basePoints));
-                if (failMode === 0) {
-                    const s = Math.random() > 0.5 ? 1.15 : 0.85;
-                    target.points.forEach(p => { p.x *= s; p.y *= s; });
-                } else if (failMode === 1) {
-                    const s = Math.random() > 0.5 ? 1.2 : 0.8;
-                    target.points.forEach(p => { p.x *= s; });
-                } else {
-                    const vertexIndex = Math.floor(Math.random() * 3);
-                    target.points[vertexIndex].x += (Math.random() - 0.5) * size * 0.4;
-                    target.points[vertexIndex].y += (Math.random() - 0.5) * size * 0.4;
-                }
+
+            const v1 = base[0], v2 = base[1], v3 = base[2];
+            switch(currentMode) {
+                case 'SSS':
+                    targetP1 = dist(v1, v2); targetP2 = dist(v1, v3); targetP3 = dist(v2, v3);
+                    setupSliders("Set Base Side", "Set Left Side", 50, 750, 50, 750);
+                    document.getElementById('constLabel3').innerText = "Set Right Side";
+                    document.getElementById('constActionBtn').innerText = "LOCK BASE";
+                    break;
+                case 'SAS':
+                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
+                    targetP2 = dist(v1, v3);
+                    setupSliders("Set Angle (Vertex 1)", "Adjacent Side (Left)", 0, 360, 50, 650);
+                    document.getElementById('constActionBtn').innerText = "LOCK ANGLE";
+                    break;
+                case 'ASA':
+                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
+                    targetP2 = (Math.atan2(v3.y-v2.y, v3.x-v2.x)*180/Math.PI + 360)%360;
+                    setupSliders("Left Angle", "Right Angle", 0, 360, 0, 360);
+                    document.getElementById('constActionBtn').innerText = "LOCK LEFT ANGLE";
+                    break;
+                case 'AAS':
+                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
+                    const a1 = targetP1;
+                    const a2 = (Math.atan2(v1.y-v2.y, v1.x-v2.x)*180/Math.PI - Math.atan2(v3.y-v2.y, v3.x-v2.x)*180/Math.PI + 360)%360;
+                    targetP2 = 180 - a1 - a2;
+                    setupSliders("Angle A (Adj)", "Angle C (Opp)", 0, 180, 0, 180);
+                    document.getElementById('constActionBtn').innerText = "LOCK ANGLE A";
+                    break;
+                case 'RHS':
+                    target.points = [{x:-size, y:0}, {x:size, y:0}, {x:-size, y:-size * (1 + level/15)}];
+                    targetP1 = dist(target.points[0], target.points[1]); targetP2 = dist(target.points[1], target.points[2]);
+                    setupSliders("Base Leg", "Hypotenuse", 50, 750, 50, 850);
+                    document.getElementById('constActionBtn').innerText = "LOCK BASE";
+                    break;
             }
- 
-            target.rotation = Math.floor(Math.random() * 360); 
-            target.scaleX = Math.random() > 0.5 ? 1 : -1;
- 
-            updateLabelUI();
+            updateConstruction();
+        }
+
+        function setupSliders(l1, l2, min1, max1, min2, max2) {
+            document.getElementById('constLabel1').innerText = l1;
+            document.getElementById('constLabel2').innerText = l2;
+            constSlider1.min = min1; constSlider1.max = max1;
+            constSlider2.min = min2; constSlider2.max = max2;
+            constSlider3.min = min2; constSlider3.max = max2; 
+        }
+
+        function updateConstruction() {
+            p1Val = parseFloat(constSlider1.value);
+            p2Val = parseFloat(constSlider2.value);
+            p3Val = parseFloat(constSlider3.value);
+            const isDeg1 = currentMode.includes('Angle') || currentMode.includes('ASA') || currentMode === 'AAS' || (currentMode === 'SAS' && constStep === 0);
+            const isDeg2 = currentMode === 'ASA' || currentMode === 'AAS';
+            document.getElementById('constVal1').innerText = Math.round(p1Val) + (isDeg1 ? '°' : '');
+            document.getElementById('constVal2').innerText = Math.round(p2Val) + (isDeg2 ? '°' : '');
+            document.getElementById('constVal3').innerText = Math.round(p3Val);
             draw();
         }
- 
-        function updateControls() {
-            if (isComplete) return;
-            player.currentX = startX + (parseFloat(superSlider.value) / 100) * (endX - startX);
-            player.rotation = parseFloat(rotSlider.value);
-            updateLabelUI();
-            updateMatchUI(calculateMatchScore());
+
+        function handleConstructionAction() {
+            if (isComplete || isAnimating) return;
+            const tol = Math.max(5, 15 - Math.floor(level/2));
+            if (currentMode === 'SSS') {
+                if (constStep === 0) {
+                    if (Math.abs(p1Val - targetP1) < tol) {
+                        constStep = 1; document.getElementById('constSlider2Group').classList.remove('hidden');
+                        document.getElementById('constActionBtn').innerText = "LOCK LEFT SIDE";
+                    } else { failStrike('constActionBtn'); }
+                } else if (constStep === 1) {
+                    if (Math.abs(p2Val - targetP2) < tol) {
+                        constStep = 2; document.getElementById('constSlider3Group').classList.remove('hidden');
+                        document.getElementById('constActionBtn').innerText = "LOCK RIGHT SIDE";
+                    } else { failStrike('constActionBtn'); }
+                } else if (constStep === 2) {
+                    if (Math.abs(p3Val - targetP3) < tol) { startSuperpositionAnim(100 + level * 10); } 
+                    else { failStrike('constActionBtn'); }
+                }
+                return;
+            }
+            if (constStep === 0) {
+                if (Math.abs(p1Val - targetP1) < tol) {
+                    constStep = 1; document.getElementById('constSlider2Group').classList.remove('hidden');
+                    document.getElementById('constActionBtn').innerText = "LOCK FINAL COMPONENT";
+                } else { failStrike('constActionBtn'); }
+            } else {
+                if (Math.abs(p2Val - targetP2) < tol) { startSuperpositionAnim(100 + level * 10); } 
+                else { failStrike('constActionBtn'); }
+            }
         }
- 
-        function updateLabelUI() {
+
+        function startSuperpositionAnim(pts) {
+            isAnimating = true; animProgress = 0;
+            animStartPose = { 
+                x: currentMode === 'QUEST' ? player.currentX : startX,
+                rot: currentMode === 'QUEST' ? player.rotation : 0,
+                sx: currentMode === 'QUEST' ? player.scaleX : 1,
+                sy: currentMode === 'QUEST' ? player.scaleY : 1
+            };
+            totalScore += pts; requestAnimationFrame(animLoop);
+        }
+
+        function animLoop() {
+            if (!isAnimating) return;
+            animProgress += 0.02;
+            if (animProgress >= 1) {
+                animProgress = 1; isAnimating = false; isComplete = true;
+                setTimeout(showWinScreen, 300);
+            }
+            player.currentX = animStartPose.x + (endX - animStartPose.x) * animProgress;
+            player.rotation = animStartPose.rot + (target.rotation - animStartPose.rot) * animProgress;
+            player.scaleX = animStartPose.sx + (target.scaleX - animStartPose.sx) * animProgress;
+            player.scaleY = animStartPose.sy + (target.scaleY - animStartPose.sy) * animProgress;
+            draw();
+            if (isAnimating) requestAnimationFrame(animLoop);
+        }
+
+        function showWinScreen() {
+            document.getElementById('resultIcon').innerText = "⭐";
+            document.getElementById('resultTitle').innerText = level === 20 ? "QUEST MASTER" : "SUCCESS";
+            document.getElementById('resultText').innerText = "Superposition proves identity.";
+            document.getElementById('pointsAwarded').innerText = "+" + (isPossible ? 100 : 150) + " XP";
+            const btn = document.getElementById('overlayActionBtn');
+            btn.innerText = level === 20 ? "MAIN MENU" : "NEXT LEVEL";
+            resultOverlay.classList.remove('hidden');
+        }
+
+        function closeResultOverlay() {
+            resultOverlay.classList.add('hidden');
+            if (level === 20) resetApp(); else { level++; initLevel(); }
+        }
+
+        function failStrike(id) {
+            strikes++; updateLivesUI();
+            const btn = document.getElementById(id); btn.classList.add('shake');
+            setTimeout(() => btn.classList.remove('shake'), 500);
+            if (strikes >= 3) showGameOver();
+        }
+
+        function updateLivesUI() { document.getElementById('livesDisplay').innerText = "❤️".repeat(3-strikes) + "🖤".repeat(strikes); }
+
+        function showGameOver() {
+            isComplete = true; document.getElementById('resultIcon').innerText = "🚫";
+            document.getElementById('resultTitle').innerText = "MISSION FAILED";
+            document.getElementById('resultText').innerText = "Strike limit reached.";
+            document.getElementById('pointsAwarded').innerText = "Score: " + totalScore;
+            document.getElementById('overlayActionBtn').innerText = "RESTART";
+            document.getElementById('overlayActionBtn').onclick = resetApp;
+            resultOverlay.classList.remove('hidden');
+        }
+
+        function genTri(s, lvl) { return [{x:-s, y:0}, {x:s, y:0}, {x:(Math.random()-0.5)*s*2, y:-s*(0.7 + lvl/40)}]; }
+        function dist(a,b) { return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2); }
+
+        function distort(pts, size, lvl) {
+            const out = JSON.parse(JSON.stringify(pts)); const m = lvl > 10 ? Math.floor(Math.random()*3) : 0;
+            if(m===0) out.forEach(p => { p.x *= 1.25; p.y *= 1.25; }); else if(m===1) out.forEach(p => p.x *= 0.8); else out[2].x += size * 0.4;
+            return out;
+        }
+
+        function setTargetPose(lvl) {
+            target.rotation = lvl < 5 ? Math.floor(Math.random()*4)*90 : Math.floor(Math.random()*360);
+            target.scaleX = lvl < 8 ? 1 : (Math.random()>0.5?1:-1);
+            target.scaleY = lvl > 12 ? (Math.random()>0.5?1:-1) : 1;
+        }
+
+        function updateControls() {
+            if(isComplete || isAnimating) return;
+            player.currentX = startX + (superSlider.value/100)*(endX-startX);
+            player.rotation = parseFloat(rotSlider.value); updateLabels(); draw();
+        }
+
+        function updateLabels() {
             document.getElementById('slideVal').innerText = Math.round(superSlider.value) + "%";
             document.getElementById('rotVal').innerText = Math.round(rotSlider.value) + "°";
+            document.getElementById('matchPercent').innerText = calcScore() + "%";
         }
- 
-        function flipPlayer() {
-            if (isComplete) return;
-            player.scaleX *= -1;
-            updateMatchUI(calculateMatchScore());
+
+        function calcScore() {
+            const d = Math.abs(player.currentX - endX);
+            const r = Math.min(Math.abs(player.rotation-target.rotation), 360-Math.abs(player.rotation-target.rotation));
+            let s = Math.max(0, 100 - (d/2 + r*1.5));
+            if(player.scaleX !== target.scaleX || player.scaleY !== target.scaleY) s = Math.min(s, 40);
+            if(!isPossible && s > 86) s = 86; return Math.round(s);
         }
- 
+
+        function flipPlayer() { if(!isAnimating) { player.scaleX *= -1; updateControls(); } }
+
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
- 
-            ctx.beginPath();
-            ctx.setLineDash([4, 12]);
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 1;
-            ctx.moveTo(0, horizonY);
-            ctx.lineTo(canvas.width, horizonY);
-            ctx.stroke();
-            ctx.setLineDash([]);
- 
-            drawTriangle(endX, horizonY, target.rotation, target.scaleX, target.points, true);
-            drawTriangle(player.currentX, horizonY, player.rotation, player.scaleX, player.points, false);
- 
-            if (!isComplete) requestAnimationFrame(draw);
-        }
- 
-        function drawTriangle(x, y, rot, scaleX, pts, isTarget) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(rot * Math.PI / 180);
-            ctx.scale(scaleX, 1);
- 
-            ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            ctx.lineTo(pts[1].x, pts[1].y);
-            ctx.lineTo(pts[2].x, pts[2].y);
-            ctx.closePath();
- 
-            if (isTarget) {
-                ctx.strokeStyle = '#3b82f6';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([5, 5]);
-                ctx.stroke();
-                ctx.fillStyle = 'rgba(59, 130, 246, 0.03)';
-                ctx.fill();
- 
-                const currentScore = calculateMatchScore();
-                if (currentScore > 85) {
-                    ctx.font = 'bold 9px monospace';
-                    ctx.fillStyle = '#64748b';
-                    ctx.textAlign = 'center';
-                    pts.forEach((p, i) => {
-                        const nextP = pts[(i+1)%3];
-                        const midX = (p.x + nextP.x) / 2;
-                        const midY = (p.y + nextP.y) / 2;
-                        const length = Math.sqrt(Math.pow(p.x - nextP.x, 2) + Math.pow(p.y - nextP.y, 2));
-                        ctx.fillText(Math.round(length), midX, midY - 5);
-                    });
-                }
- 
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = '#1e293b66'; ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=60) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let i=0; i<canvas.height; i+=60) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+            ctx.setLineDash([5,15]); ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(0,horizonY); ctx.lineTo(canvas.width,horizonY); ctx.stroke(); ctx.setLineDash([]);
+            
+            drawTri(endX, horizonY, target.rotation, target.scaleX, target.scaleY, target.points, true);
+            
+            if (isAnimating || isComplete) {
+                const pts = currentMode === 'QUEST' ? player.points : getConstPoints();
+                drawTri(player.currentX, horizonY, player.rotation, player.scaleX, player.scaleY, pts, false);
+            } else if (currentMode === 'QUEST') {
+                drawTri(player.currentX, horizonY, player.rotation, player.scaleX, player.scaleY, player.points, false);
             } else {
-                ctx.fillStyle = 'rgba(168, 85, 247, 0.6)';
-                ctx.fill();
-                ctx.strokeStyle = '#d8b4fe';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                if (isComplete) {
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = '#4ade80';
-                    ctx.strokeStyle = '#4ade80';
-                    ctx.stroke();
-                }
+                drawConstPlayer();
+            }
+        }
+
+        function getConstPoints() {
+            const bLen = (currentMode === 'SSS') ? p1Val : dist(target.points[0], target.points[1]);
+            const dp1 = {x: -(bLen/2), y: 0};
+            const dp2 = {x: (bLen/2), y: 0};
+            let px3=0, py3=0;
+
+            if (currentMode === 'SSS') {
+                const a=(constStep === 2) ? p3Val : 10, b=(constStep >= 1) ? p2Val : 10, c=p1Val;
+                const cosA = (c*c + b*b - a*a)/(2*c*b);
+                const angle = Math.acos(Math.max(-1, Math.min(1, cosA)));
+                px3 = dp1.x + Math.cos(-angle)*b; py3 = dp1.y + Math.sin(-angle)*b;
+            } else if (currentMode === 'SAS') {
+                px3 = dp1.x + Math.cos(-p1Val*Math.PI/180)*p2Val; py3 = dp1.y + Math.sin(-p1Val*Math.PI/180)*p2Val;
+            } else if (currentMode === 'ASA' || currentMode === 'AAS') {
+                const a1=p1Val*Math.PI/180, a2=p2Val*Math.PI/180;
+                const sideL = (bLen * Math.sin(a2)) / Math.sin(Math.PI - (a1+a2));
+                px3 = dp1.x + Math.cos(-a1)*sideL; py3 = dp1.y + Math.sin(-a1)*sideL;
+            } else if (currentMode === 'RHS') {
+                px3 = dp1.x; py3 = dp1.y - Math.sqrt(Math.abs(p2Val**2 - p1Val**2));
+            }
+            return [dp1, dp2, {x: px3, y: py3}];
+        }
+
+        function drawTri(x, y, rot, sx, sy, pts, isTarget) {
+            ctx.save(); ctx.translate(x,y); ctx.rotate(rot*Math.PI/180); ctx.scale(sx, sy);
+            ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[1].x, pts[1].y); ctx.lineTo(pts[2].x, pts[2].y); ctx.closePath();
+            if(isTarget) {
+                ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.setLineDash([8, 4]); ctx.stroke();
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.05)'; ctx.fill();
+                drawMetrics(pts, true);
+            } else {
+                ctx.fillStyle = isComplete ? '#4ade80cc' : '#818cf8cc'; ctx.fill();
+                ctx.strokeStyle = isComplete ? '#4ade80' : '#6366f1'; ctx.lineWidth = 2.5; ctx.stroke();
             }
             ctx.restore();
         }
- 
-        function calculateMatchScore() {
-            const dist = Math.abs(player.currentX - endX);
-            const rotDiff = Math.min(Math.abs(player.rotation - target.rotation), 360 - Math.abs(player.rotation - target.rotation));
-            const flipMatch = player.scaleX === target.scaleX;
- 
-            const dScore = Math.max(0, 100 - (dist / 1.5));
-            const rScore = Math.max(0, 100 - (rotDiff * 1.5));
-            let total = (dScore + rScore) / 2;
-            if (!flipMatch) total = Math.min(total, 40);
- 
-            if (!isPossible && total > 88) total = 88 + (Math.random() * 2);
- 
-            return Math.min(100, total);
+
+        function drawMetrics(pts, isBlue) {
+            if (currentDifficulty === 'hard' && currentMode === 'QUEST') return;
+            ctx.font = 'bold 12px monospace'; ctx.fillStyle = isBlue ? '#3b82f6' : '#d8b4fe'; ctx.textAlign = 'center';
+            const cx = pts.reduce((sum, p) => sum + p.x, 0) / 3;
+            const cy = pts.reduce((sum, p) => sum + p.y, 0) / 3;
+            const angs = getAngles(pts);
+            pts.forEach((p, i) => {
+                const next = pts[(i+1)%3];
+                const prev = pts[(i+2)%3];
+                const midX = (p.x + next.x) / 2, midY = (p.y + next.y) / 2;
+                const sdx = midX - cx, sdy = midY - cy;
+                const slen = Math.sqrt(sdx*sdx + sdy*sdy);
+                ctx.fillText(Math.round(dist(p, next)), midX + (sdx/slen)*25, midY + (sdy/slen)*25);
+
+                if (currentMode !== 'SSS' && currentMode !== 'RHS') {
+                    const adx = p.x - cx, ady = p.y - cy;
+                    const alen = Math.sqrt(adx*adx + ady*ady);
+                    ctx.fillText(angs[i]+"°", p.x + (adx/alen)*35, p.y + (ady/alen)*35);
+                }
+                if (currentMode !== 'QUEST') {
+                    ctx.beginPath();
+                    const sA = Math.atan2(prev.y-p.y, prev.x-p.x);
+                    const eA = Math.atan2(next.y-p.y, next.x-p.x);
+                    ctx.arc(p.x, p.y, 18, sA, eA);
+                    ctx.strokeStyle = isBlue ? '#3b82f688' : '#a855f788'; ctx.lineWidth = 2; ctx.stroke();
+                }
+            });
         }
- 
-        function updateMatchUI(score) {
-            const displayScore = Math.round(score);
-            const el = document.getElementById('matchPercent');
-            el.innerText = displayScore + "%";
-            el.className = displayScore > 92 ? "text-green-400" : "text-blue-400";
+
+        function getAngles(pts) {
+            const a=dist(pts[1], pts[2]), b=dist(pts[0], pts[2]), c=dist(pts[0], pts[1]);
+            const A = Math.round(Math.acos(Math.max(-1, Math.min(1, (b*b+c*c-a*a)/(2*b*c))))*180/Math.PI);
+            const B = Math.round(Math.acos(Math.max(-1, Math.min(1, (a*a+c*c-b*b)/(2*a*c))))*180/Math.PI);
+            return [A, B, 180-A-B];
         }
- 
-        function handleConfirm() {
-            if (isComplete) return;
-            const dist = Math.abs(player.currentX - endX);
-            const rotDiff = Math.min(Math.abs(player.rotation - target.rotation), 360 - Math.abs(player.rotation - target.rotation));
-            const flipMatch = player.scaleX === target.scaleX;
- 
-            if (isPossible && dist < 12 && rotDiff < 6 && flipMatch) {
-                const points = 100;
-                totalScore += points;
-                showResult(true, "CONGRUENT!", "Perfect superposition achieved. The triangles are identical!", "✨", points);
-            } else {
-                shakeUI('confirmBtn');
-                if (!isPossible) updateHint("The vertices won't line up. Is this a red herring?", "text-red-400");
-                else if (!flipMatch) updateHint("Reflection required! Try flipping the triangle.", "text-blue-400");
-                else updateHint("Alignment error. Fine-tune the sliders.", "text-yellow-400");
+
+        function drawConstPlayer() {
+            ctx.save(); ctx.translate(startX, horizonY);
+            const pts = getConstPoints();
+            const p1 = pts[0], p2 = pts[1], p3 = pts[2];
+            if (currentMode === 'SSS') {
+                ctx.setLineDash([]); ctx.lineWidth = 3; ctx.shadowBlur = 15; ctx.shadowColor = '#a855f7'; ctx.strokeStyle = '#a855f7';
+                if (constStep >= 1) { 
+                    const ang = Math.atan2(p3.y-p1.y, p3.x-p1.x);
+                    ctx.beginPath(); ctx.arc(p1.x, p1.y, p2Val, ang-0.8, ang+0.8); ctx.stroke();
+                }
+                if (constStep >= 2) { 
+                    const ang = Math.atan2(p3.y-p2.y, p3.x-p2.x);
+                    ctx.beginPath(); ctx.arc(p2.x, p2.y, p3Val, ang-0.8, ang+0.8); ctx.stroke();
+                }
+                ctx.shadowBlur = 0;
             }
-        }
- 
-        function handleReject() {
-            if (isComplete) return;
-            if (!isPossible) {
-                const points = 150; // More points for harder red herrings
-                totalScore += points;
-                showResult(true, "SHARP EYE!", "Correct! You spotted the advanced red herring. Not congruent!", "🔍", points);
-            } else {
-                shakeUI('rejectBtn');
-                updateHint("Investigation failed! These triangles are congruent. Keep adjusting!", "text-yellow-400");
+            ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            if (constStep >= 1 || currentMode !== 'SSS') {
+                ctx.strokeStyle = '#a855f7';
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
             }
+            ctx.restore();
         }
- 
-        function shakeUI(id) {
-            const btn = document.getElementById(id);
-            btn.classList.add('shake');
-            setTimeout(() => btn.classList.remove('shake'), 500);
-        }
- 
-        function updateHint(txt, colorClass) {
-            const hint = document.getElementById('hintText');
-            hint.innerText = txt;
-            hint.className = `text-[9px] text-center uppercase font-bold px-2 ${colorClass}`;
-        }
- 
-        function showResult(success, title, text, icon, pts) {
-            isComplete = true;
-            document.getElementById('resultTitle').innerText = title;
-            document.getElementById('resultText').innerText = text;
-            document.getElementById('resultIcon').innerText = icon;
-            document.getElementById('pointsAwarded').innerText = "+" + pts + " PTS";
-            resultOverlay.classList.remove('hidden');
- 
-            if (isPossible) {
-                player.currentX = endX;
-                player.rotation = target.rotation;
-                player.scaleX = target.scaleX;
-                document.getElementById('matchPercent').innerText = "100%";
-            } else {
-                document.getElementById('matchPercent').innerText = "FALSE";
-            }
- 
-            superSlider.disabled = true;
-            rotSlider.disabled = true;
-            draw();
-        }
- 
-        function nextLevel() {
-            level++;
-            initLevel();
-        }
+
+        resize();
     </script>
 </body>
 </html>
- 
- 
