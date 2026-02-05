@@ -108,30 +108,29 @@
 </head>
 <body class="text-slate-200">
 
-    <!-- Title Screen -->
     <div id="titleScreen" class="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center p-8 text-center overflow-y-auto">
-        <div class="mb-6 space-y-4 max-w-2xl">
+        <div class="mb-6 space-y-4 max-w-2xl text-center text-white">
             <h1 class="text-4xl lg:text-6xl font-black tracking-tighter text-white uppercase italic text-center">
                 CONGRUENCE <span class="text-purple-500 not-italic">QUEST</span>
             </h1>
             <p class="text-slate-400 text-xs tracking-[0.4em] uppercase font-light text-center">Atharv Nadkarni Geometry Series</p>
         </div>
         
-        <div class="glass-card p-6 rounded-[2rem] max-w-lg mb-8 space-y-4 shadow-2xl border border-white/5 text-center">
+        <div class="glass-card p-6 rounded-[2rem] max-w-lg mb-8 space-y-4 shadow-2xl border border-white/5 text-center text-white">
             <p class="text-xs lg:text-sm text-slate-400 leading-relaxed text-center">
                 Prove triangles are identical through 20 levels. Build them using <b>SSS, SAS, ASA, AAS, and RHS</b> postulates or test your skills in <b>Rigid Motion</b>.
             </p>
             <div class="grid grid-cols-2 gap-4 text-[10px] lg:text-xs font-semibold text-left border-t border-slate-800 pt-4">
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-purple-500 rounded-full"></span> <b>QUEST:</b> Rigid Motion</div>
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-blue-500 rounded-full"></span> <b>SSS:</b> 3 Side construction</div>
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span> <b>SAS:</b> Side-Angle-Side</div>
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-pink-500 rounded-full"></span> <b>ASA:</b> Angle-Side-Angle</div>
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-orange-500 rounded-full"></span> <b>AAS:</b> Angle-Angle-Side</div>
-                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-red-500 rounded-full"></span> <b>RHS:</b> Right-Hyp-Side</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-purple-500 rounded-full"></span> <b>QUEST:</b> Rigid Motion</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-blue-500 rounded-full"></span> <b>SSS:</b> 3 Side construction</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span> <b>SAS:</b> Side-Angle-Side</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-pink-500 rounded-full"></span> <b>ASA:</b> Angle-Side-Angle</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-orange-500 rounded-full"></span> <b>AAS:</b> Angle-Angle-Side</div>
+                <div class="flex items-center gap-2 text-white"><span class="w-2 h-2 bg-red-500 rounded-full"></span> <b>RHS:</b> Right-Hyp-Side</div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-white">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-white text-center">
             <button onclick="startGame('QUEST', 'normal')" class="mode-btn px-6 py-4 bg-purple-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">Rigid Motion (Normal)</button>
             <button onclick="startGame('QUEST', 'hard')" class="mode-btn px-6 py-4 bg-slate-800 border border-slate-700 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">Rigid Motion (Hard)</button>
             <button onclick="startGame('SSS', 'normal')" class="mode-btn px-6 py-4 bg-blue-600 font-black rounded-xl shadow-lg uppercase tracking-widest text-[10px]">SSS construction</button>
@@ -146,21 +145,21 @@
         </div>
     </div>
 
-    <!-- Result Overlay -->
+    <!-- Global Result Overlay -->
     <div id="resultOverlay" class="fixed inset-0 flex items-center justify-center bg-slate-950/90 backdrop-blur-md hidden z-[150] p-6 text-white text-center">
         <div class="text-center p-10 glass-card rounded-[2.5rem] shadow-2xl max-w-sm w-full border border-white/10">
             <div id="resultIcon" class="mb-6 text-6xl transform scale-125">✨</div>
             <h2 id="resultTitle" class="text-3xl font-black mb-3 tracking-tight uppercase">Success!</h2>
-            <p id="resultText" class="text-slate-400 text-sm mb-6 leading-relaxed">Verification successful.</p>
+            <p id="resultText" class="text-slate-400 text-sm mb-6 leading-relaxed text-center text-white">Verification successful.</p>
             <div id="pointsAwarded" class="text-yellow-400 font-black text-2xl mb-8 tracking-tighter uppercase">+100 XP</div>
-            <button id="overlayActionBtn" onclick="closeResultOverlay()" class="w-full bg-purple-600 hover:bg-purple-500 py-5 rounded-2xl font-black transition-all active:scale-95 shadow-xl shadow-purple-900/30 uppercase tracking-[0.2em] text-sm">Next Level</button>
+            <button id="overlayActionBtn" class="w-full bg-purple-600 hover:bg-purple-500 py-5 rounded-2xl font-black transition-all active:scale-95 shadow-xl shadow-purple-900/30 uppercase tracking-[0.2em] text-sm text-white">Next Level</button>
         </div>
     </div>
 
-    <!-- Gameplay -->
     <div id="gameContainer" class="hidden app-container">
         <div class="canvas-section" id="canvasWrapper">
             <canvas id="gameCanvas"></canvas>
+            <!-- HUD -->
             <div class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col gap-2 items-center w-full px-4">
                 <div class="flex gap-2 items-center flex-wrap justify-center">
                     <button onclick="resetApp()" class="glass-card p-2 rounded-xl hover:bg-white/10 transition-all active:scale-95 group shadow-sm">
@@ -188,7 +187,7 @@
             <div class="p-8 lg:p-10 flex flex-col h-full">
                 <div class="mb-8 flex items-center justify-between">
                     <div>
-                        <h2 id="modeTitle" class="text-xl font-black text-white tracking-tight uppercase italic">Command Center</h2>
+                        <h2 id="modeTitle" class="text-xl font-black text-white tracking-tight uppercase italic text-center">Command Center</h2>
                         <div class="h-1 w-12 bg-purple-600 mt-2 rounded-full"></div>
                     </div>
                     <div id="modeBadge" class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-purple-500/30">QUEST</div>
@@ -212,7 +211,7 @@
                                 <input type="range" id="rotSlider" min="0" max="360" value="0" step="1" oninput="updateControls()">
                             </div>
                         </div>
-                        <div class="space-y-3">
+                        <div class="space-y-3 text-center">
                             <button onclick="flipPlayer()" class="w-full bg-slate-800 py-4 rounded-xl border border-slate-700 font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all text-white">Reflect Triangle</button>
                             <div class="grid grid-cols-2 gap-3 text-center">
                                 <button id="confirmBtn" onclick="handleConfirm()" class="bg-white text-slate-900 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all text-center">Confirm Match</button>
@@ -221,10 +220,10 @@
                         </div>
                     </div>
 
-                    <div id="constructControls" class="hidden space-y-6">
-                        <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 text-center">
-                            <h3 id="constTaskTitle" class="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] mb-2">Step 1: Set Geometry</h3>
-                            <p id="constTaskDesc" class="text-[11px] text-slate-400 leading-relaxed">Adjust your part to match the target's geometry.</p>
+                    <div id="constructControls" class="hidden space-y-6 text-white">
+                        <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 text-center text-white">
+                            <h3 id="constTaskTitle" class="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] mb-2 text-white">Step 1: Set Geometry</h3>
+                            <p id="constTaskDesc" class="text-[11px] text-slate-400 leading-relaxed text-center">Adjust your part to match the blueprint measurements.</p>
                         </div>
                         <div class="space-y-6">
                             <div id="constSlider1Group" class="space-y-3">
@@ -249,7 +248,7 @@
                                 <input type="range" id="constSlider3" min="10" max="750" value="100" step="1" oninput="updateConstruction()">
                             </div>
                         </div>
-                        <button id="constActionBtn" onclick="handleConstructionAction()" class="w-full bg-purple-600 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all text-white">LOCK COMPONENT</button>
+                        <button id="constActionBtn" onclick="handleConstructionAction()" class="w-full bg-purple-600 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all text-white text-center">LOCK COMPONENT</button>
                     </div>
                 </div>
             </div>
@@ -266,6 +265,7 @@
         const constSlider2 = document.getElementById('constSlider2');
         const constSlider3 = document.getElementById('constSlider3');
         const resultOverlay = document.getElementById('resultOverlay');
+        const overlayActionBtn = document.getElementById('overlayActionBtn');
 
         let level = 1, totalScore = 0, strikes = 0;
         let isComplete = false, isAnimating = false, isPossible = true;
@@ -287,7 +287,8 @@
         }
 
         function resetApp() { 
-            document.getElementById('titleScreen').style.display = 'flex';
+            document.getElementById('titleScreen').style.display = 'none';
+            setTimeout(() => { document.getElementById('titleScreen').style.display = 'flex'; }, 0);
             document.getElementById('gameContainer').classList.add('hidden');
             isAnimating = false; isComplete = false;
         }
@@ -295,16 +296,14 @@
         function resize() {
             if (document.getElementById('gameContainer').classList.contains('hidden')) return;
             canvas.width = wrapper.clientWidth; canvas.height = wrapper.clientHeight;
-            horizonY = canvas.height * 0.7; // Lowered baseline to clear HUD
-            startX = canvas.width * 0.3; // Shift right to clear HUD
-            endX = canvas.width * 0.75;
+            horizonY = canvas.height * 0.75; startX = canvas.width * 0.3; endX = canvas.width * 0.75;
             initLevel();
         }
 
         window.addEventListener('resize', resize);
 
         function initLevel() {
-            isComplete = false; isAnimating = false; animProgress = 0;
+            isComplete = false; isAnimating = false; animProgress = 0; strikes = 0;
             resultOverlay.classList.add('hidden');
             const badge = document.getElementById('modeBadge');
             const matchHUD = document.getElementById('matchHUD');
@@ -328,7 +327,7 @@
         function initQuestLevel() {
             isPossible = Math.random() > 0.4;
             superSlider.value = 0; rotSlider.value = 0;
-            const size = Math.min(canvas.width, canvas.height) * 0.22;
+            const size = Math.min(canvas.width, canvas.height) * 0.32; 
             const base = genTri(size, level);
             player.points = base;
             player.rotation = 0; player.scaleX = 1; player.scaleY = 1; player.currentX = startX;
@@ -344,9 +343,9 @@
             
             document.getElementById('constSlider1Group').classList.remove('hidden');
             document.getElementById('constSlider2Group').classList.add('hidden');
-            document.getElementById('constSlider3Group').classList.add('hidden');
+            document.getElementById('constSlider3Group').classList.remove('hidden');
             
-            const scaleMult = currentMode === 'SSS' ? 0.38 : 0.25;
+            const scaleMult = (currentMode === 'SSS' || currentMode === 'SAS' || currentMode === 'ASA' || currentMode === 'AAS') ? 0.45 : 0.3;
             const size = Math.min(canvas.width, canvas.height) * (scaleMult + (level / 100));
             const base = genTri(size, level);
             target.points = base; target.rotation = 0; target.scaleX = 1; target.scaleY = 1; 
@@ -354,37 +353,43 @@
             player.currentX = startX;
 
             const v1 = base[0], v2 = base[1], v3 = base[2];
+            const angs = getAngles(base);
+
             switch(currentMode) {
                 case 'SSS':
                     targetP1 = dist(v1, v2); targetP2 = dist(v1, v3); targetP3 = dist(v2, v3);
-                    setupSliders("Set Base Side", "Set Left Side", 50, 750, 50, 750);
+                    setupSliders("Set Base Length", "Set Left Side", 50, 750, 50, 750);
                     document.getElementById('constLabel3').innerText = "Set Right Side";
                     document.getElementById('constActionBtn').innerText = "LOCK BASE";
                     break;
                 case 'SAS':
-                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
-                    targetP2 = dist(v1, v3);
-                    setupSliders("Set Angle (Vertex 1)", "Adjacent Side (Left)", 0, 360, 50, 650);
-                    document.getElementById('constActionBtn').innerText = "LOCK ANGLE";
+                    targetP1 = dist(v1, v2); 
+                    targetP2 = angs[0];      
+                    targetP3 = dist(v1, v3); 
+                    setupSliders("Set Base Leg", "Set Included Angle", 50, 750, 0, 180);
+                    document.getElementById('constLabel3').innerText = "Set Adjacent Side";
+                    document.getElementById('constActionBtn').innerText = "LOCK BASE LEG";
                     break;
                 case 'ASA':
-                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
-                    targetP2 = (Math.atan2(v3.y-v2.y, v3.x-v2.x)*180/Math.PI + 360)%360;
-                    setupSliders("Left Angle", "Right Angle", 0, 360, 0, 360);
-                    document.getElementById('constActionBtn').innerText = "LOCK LEFT ANGLE";
+                    targetP1 = dist(v1, v2); 
+                    targetP2 = angs[0];      
+                    targetP3 = angs[1];      
+                    setupSliders("Set Base Side", "Set Left Angle", 50, 750, 0, 180);
+                    document.getElementById('constLabel3').innerText = "Set Right Angle";
+                    document.getElementById('constActionBtn').innerText = "LOCK BASE SIDE";
                     break;
                 case 'AAS':
-                    targetP1 = (Math.atan2(v3.y-v1.y, v3.x-v1.x)*180/Math.PI + 360)%360;
-                    const a1 = targetP1;
-                    const a2 = (Math.atan2(v1.y-v2.y, v1.x-v2.x)*180/Math.PI - Math.atan2(v3.y-v2.y, v3.x-v2.x)*180/Math.PI + 360)%360;
-                    targetP2 = 180 - a1 - a2;
-                    setupSliders("Angle A (Adj)", "Angle C (Opp)", 0, 180, 0, 180);
-                    document.getElementById('constActionBtn').innerText = "LOCK ANGLE A";
+                    targetP1 = dist(v1, v2); 
+                    targetP2 = angs[0];      
+                    targetP3 = angs[2];      
+                    setupSliders("Set Side Length", "Set Angle 1", 50, 750, 0, 180);
+                    document.getElementById('constLabel3').innerText = "Set Angle 3 (Opp)";
+                    document.getElementById('constActionBtn').innerText = "LOCK SIDE LENGTH";
                     break;
                 case 'RHS':
                     target.points = [{x:-size, y:0}, {x:size, y:0}, {x:-size, y:-size * (1 + level/15)}];
                     targetP1 = dist(target.points[0], target.points[1]); targetP2 = dist(target.points[1], target.points[2]);
-                    setupSliders("Base Leg", "Hypotenuse", 50, 750, 50, 850);
+                    setupSliders("Base Side", "Hypotenuse", 50, 750, 50, 850);
                     document.getElementById('constActionBtn').innerText = "LOCK BASE";
                     break;
             }
@@ -403,27 +408,33 @@
             p1Val = parseFloat(constSlider1.value);
             p2Val = parseFloat(constSlider2.value);
             p3Val = parseFloat(constSlider3.value);
-            const isDeg1 = currentMode.includes('Angle') || currentMode.includes('ASA') || currentMode === 'AAS' || (currentMode === 'SAS' && constStep === 0);
-            const isDeg2 = currentMode === 'ASA' || currentMode === 'AAS';
-            document.getElementById('constVal1').innerText = Math.round(p1Val) + (isDeg1 ? '°' : '');
-            document.getElementById('constVal2').innerText = Math.round(p2Val) + (isDeg2 ? '°' : '');
-            document.getElementById('constVal3').innerText = Math.round(p3Val);
             draw();
         }
 
         function handleConstructionAction() {
             if (isComplete || isAnimating) return;
-            const tol = Math.max(5, 15 - Math.floor(level/2));
-            if (currentMode === 'SSS') {
+            const tol = Math.max(5, 12 - Math.floor(level/3));
+            
+            if (currentMode !== 'RHS') {
                 if (constStep === 0) {
                     if (Math.abs(p1Val - targetP1) < tol) {
                         constStep = 1; document.getElementById('constSlider2Group').classList.remove('hidden');
-                        document.getElementById('constActionBtn').innerText = "LOCK LEFT SIDE";
+                        let nextText = "LOCK STEP 2";
+                        if (currentMode === 'SSS') nextText = "LOCK LEFT SIDE";
+                        if (currentMode === 'SAS') nextText = "LOCK ANGLE";
+                        if (currentMode === 'ASA') nextText = "LOCK LEFT ANGLE";
+                        if (currentMode === 'AAS') nextText = "LOCK ANGLE 1";
+                        document.getElementById('constActionBtn').innerText = nextText;
                     } else { failStrike('constActionBtn'); }
                 } else if (constStep === 1) {
                     if (Math.abs(p2Val - targetP2) < tol) {
                         constStep = 2; document.getElementById('constSlider3Group').classList.remove('hidden');
-                        document.getElementById('constActionBtn').innerText = "LOCK RIGHT SIDE";
+                        let nextText = "LOCK FINAL PART";
+                        if (currentMode === 'SSS') nextText = "LOCK RIGHT SIDE";
+                        if (currentMode === 'SAS') nextText = "LOCK FINAL SIDE";
+                        if (currentMode === 'ASA') nextText = "LOCK RIGHT ANGLE";
+                        if (currentMode === 'AAS') nextText = "LOCK ANGLE 3";
+                        document.getElementById('constActionBtn').innerText = nextText;
                     } else { failStrike('constActionBtn'); }
                 } else if (constStep === 2) {
                     if (Math.abs(p3Val - targetP3) < tol) { startSuperpositionAnim(100 + level * 10); } 
@@ -431,6 +442,7 @@
                 }
                 return;
             }
+            
             if (constStep === 0) {
                 if (Math.abs(p1Val - targetP1) < tol) {
                     constStep = 1; document.getElementById('constSlider2Group').classList.remove('hidden');
@@ -450,7 +462,9 @@
                 sx: currentMode === 'QUEST' ? player.scaleX : 1,
                 sy: currentMode === 'QUEST' ? player.scaleY : 1
             };
-            totalScore += pts; requestAnimationFrame(animLoop);
+            totalScore += pts; 
+            overlayActionBtn.onclick = closeResultOverlay; 
+            requestAnimationFrame(animLoop);
         }
 
         function animLoop() {
@@ -473,14 +487,20 @@
             document.getElementById('resultTitle').innerText = level === 20 ? "QUEST MASTER" : "SUCCESS";
             document.getElementById('resultText').innerText = "Superposition proves identity.";
             document.getElementById('pointsAwarded').innerText = "+" + (isPossible ? 100 : 150) + " XP";
-            const btn = document.getElementById('overlayActionBtn');
-            btn.innerText = level === 20 ? "MAIN MENU" : "NEXT LEVEL";
+            
+            overlayActionBtn.innerText = level === 20 ? "MAIN MENU" : "NEXT LEVEL";
+            overlayActionBtn.onclick = closeResultOverlay; 
             resultOverlay.classList.remove('hidden');
         }
 
         function closeResultOverlay() {
             resultOverlay.classList.add('hidden');
-            if (level === 20) resetApp(); else { level++; initLevel(); }
+            if (level === 20) {
+                resetApp();
+            } else {
+                level++;
+                initLevel();
+            }
         }
 
         function failStrike(id) {
@@ -497,12 +517,14 @@
             document.getElementById('resultTitle').innerText = "MISSION FAILED";
             document.getElementById('resultText').innerText = "Strike limit reached.";
             document.getElementById('pointsAwarded').innerText = "Score: " + totalScore;
-            document.getElementById('overlayActionBtn').innerText = "RESTART";
-            document.getElementById('overlayActionBtn').onclick = resetApp;
+            overlayActionBtn.innerText = "RESTART";
+            overlayActionBtn.onclick = resetApp;
             resultOverlay.classList.remove('hidden');
         }
 
-        function genTri(s, lvl) { return [{x:-s, y:0}, {x:s, y:0}, {x:(Math.random()-0.5)*s*2, y:-s*(0.7 + lvl/40)}]; }
+        function genTri(s, lvl) { 
+            return [{x:-s, y:0}, {x:s, y:0}, {x:(Math.random()-0.5)*s*2, y:-s*(0.7 + lvl/40)}]; 
+        }
         function dist(a,b) { return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2); }
 
         function distort(pts, size, lvl) {
@@ -512,9 +534,13 @@
         }
 
         function setTargetPose(lvl) {
-            target.rotation = lvl < 5 ? Math.floor(Math.random()*4)*90 : Math.floor(Math.random()*360);
-            target.scaleX = lvl < 8 ? 1 : (Math.random()>0.5?1:-1);
-            target.scaleY = lvl > 12 ? (Math.random()>0.5?1:-1) : 1;
+            if (currentMode === 'QUEST') {
+                target.rotation = lvl < 5 ? Math.floor(Math.random()*4)*90 : Math.floor(Math.random()*360);
+                target.scaleX = lvl < 8 ? 1 : (Math.random()>0.5?1:-1);
+                target.scaleY = lvl > 12 ? (Math.random()>0.5?1:-1) : 1;
+            } else {
+                target.rotation = 0; target.scaleX = 1; target.scaleY = 1;
+            }
         }
 
         function updateControls() {
@@ -559,10 +585,15 @@
         }
 
         function getConstPoints() {
-            const bLen = (currentMode === 'SSS') ? p1Val : dist(target.points[0], target.points[1]);
-            const dp1 = {x: -(bLen/2), y: 0};
-            const dp2 = {x: (bLen/2), y: 0};
-            let px3=0, py3=0;
+            let bLen = 0, dp1 = {x: 0, y: 0}, dp2 = {x: 0, y: 0}, px3 = 0, py3 = 0;
+            
+            if (currentMode === 'SSS' || currentMode === 'SAS' || currentMode === 'ASA' || currentMode === 'AAS' || currentMode === 'RHS') {
+                bLen = p1Val;
+            } else {
+                bLen = dist(target.points[0], target.points[1]);
+            }
+            
+            dp1 = {x: -(bLen/2), y: 0}; dp2 = {x: (bLen/2), y: 0};
 
             if (currentMode === 'SSS') {
                 const a=(constStep === 2) ? p3Val : 10, b=(constStep >= 1) ? p2Val : 10, c=p1Val;
@@ -570,11 +601,31 @@
                 const angle = Math.acos(Math.max(-1, Math.min(1, cosA)));
                 px3 = dp1.x + Math.cos(-angle)*b; py3 = dp1.y + Math.sin(-angle)*b;
             } else if (currentMode === 'SAS') {
-                px3 = dp1.x + Math.cos(-p1Val*Math.PI/180)*p2Val; py3 = dp1.y + Math.sin(-p1Val*Math.PI/180)*p2Val;
+                const angleRad = (constStep >= 1 ? p2Val : 0) * Math.PI / 180;
+                const sideL = (constStep >= 2 ? p3Val : 10);
+                px3 = dp1.x + Math.cos(-angleRad)*sideL; py3 = dp1.y + Math.sin(-angleRad)*sideL;
             } else if (currentMode === 'ASA' || currentMode === 'AAS') {
-                const a1=p1Val*Math.PI/180, a2=p2Val*Math.PI/180;
-                const sideL = (bLen * Math.sin(a2)) / Math.sin(Math.PI - (a1+a2));
-                px3 = dp1.x + Math.cos(-a1)*sideL; py3 = dp1.y + Math.sin(-a1)*sideL;
+                const a1=(constStep >= 1 ? p2Val : 0) * Math.PI / 180;
+                const a2=(constStep >= 2 ? p3Val : 0) * Math.PI / 180;
+                
+                if (currentMode === 'ASA') {
+                    if (constStep === 1) {
+                        px3 = dp1.x + Math.cos(-a1) * 150;
+                        py3 = dp1.y + Math.sin(-a1) * 150;
+                    } else {
+                        const sideL = (bLen * Math.sin(a2)) / Math.sin(Math.PI - (a1+a2));
+                        px3 = dp1.x + Math.cos(-a1)*sideL; py3 = dp1.y + Math.sin(-a1)*sideL;
+                    }
+                } else {
+                    if (constStep === 1) {
+                        px3 = dp1.x + Math.cos(-a1) * 150;
+                        py3 = dp1.y + Math.sin(-a1) * 150;
+                    } else {
+                        const angleAtV2 = Math.PI - (a1 + a2);
+                        const sideL = (bLen * Math.sin(angleAtV2)) / Math.sin(a2);
+                        px3 = dp1.x + Math.cos(-a1)*sideL; py3 = dp1.y + Math.sin(-a1)*sideL;
+                    }
+                }
             } else if (currentMode === 'RHS') {
                 px3 = dp1.x; py3 = dp1.y - Math.sqrt(Math.abs(p2Val**2 - p1Val**2));
             }
@@ -587,38 +638,102 @@
             if(isTarget) {
                 ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.setLineDash([8, 4]); ctx.stroke();
                 ctx.fillStyle = 'rgba(59, 130, 246, 0.05)'; ctx.fill();
-                drawMetrics(pts, true);
+                drawMetrics(pts, true, sx, sy, rot);
             } else {
                 ctx.fillStyle = isComplete ? '#4ade80cc' : '#818cf8cc'; ctx.fill();
                 ctx.strokeStyle = isComplete ? '#4ade80' : '#6366f1'; ctx.lineWidth = 2.5; ctx.stroke();
+                if (currentMode === 'QUEST' || isComplete) drawMetrics(pts, false, sx, sy, rot);
             }
             ctx.restore();
         }
 
-        function drawMetrics(pts, isBlue) {
+        function drawMetrics(pts, isBlue, sx, sy, rot) {
             if (currentDifficulty === 'hard' && currentMode === 'QUEST') return;
             ctx.font = 'bold 12px monospace'; ctx.fillStyle = isBlue ? '#3b82f6' : '#d8b4fe'; ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
             const cx = pts.reduce((sum, p) => sum + p.x, 0) / 3;
             const cy = pts.reduce((sum, p) => sum + p.y, 0) / 3;
             const angs = getAngles(pts);
+            
+            const drawUprightLabel = (txt, tx, ty, clr) => {
+                ctx.save();
+                ctx.translate(tx, ty);
+                ctx.rotate(-rot*Math.PI/180);
+                ctx.scale(1/sx, 1/sy); 
+                if (clr) ctx.fillStyle = clr;
+                ctx.fillText(txt, 0, 0);
+                ctx.restore();
+            };
+
             pts.forEach((p, i) => {
                 const next = pts[(i+1)%3];
                 const prev = pts[(i+2)%3];
-                const midX = (p.x + next.x) / 2, midY = (p.y + next.y) / 2;
-                const sdx = midX - cx, sdy = midY - cy;
-                const slen = Math.sqrt(sdx*sdx + sdy*sdy);
-                ctx.fillText(Math.round(dist(p, next)), midX + (sdx/slen)*25, midY + (sdy/slen)*25);
+                
+                let showSide = true;
+                let showAngle = true;
 
-                if (currentMode !== 'SSS' && currentMode !== 'RHS') {
-                    const adx = p.x - cx, ady = p.y - cy;
-                    const alen = Math.sqrt(adx*adx + ady*ady);
-                    ctx.fillText(angs[i]+"°", p.x + (adx/alen)*35, p.y + (ady/alen)*35);
+                if (!isBlue && !isAnimating && !isComplete) {
+                    if (currentMode === 'SSS') {
+                        if (i === 1 && constStep < 1) showSide = false;
+                        if (i === 2 && constStep < 2) showSide = false;
+                        showAngle = false;
+                    } else if (currentMode === 'SAS') {
+                        if (i === 1) showSide = false;
+                        if (i === 2 && constStep < 2) showSide = false;
+                        if (i === 0 && constStep < 1) showAngle = false;
+                        if (i > 0) showAngle = false;
+                    } else if (currentMode === 'ASA') {
+                        if (i > 0) showSide = false;
+                        if (i === 0 && constStep < 1) showAngle = false;
+                        if (i === 1 && constStep < 2) showAngle = false;
+                        if (i === 2) showAngle = false;
+                    } else if (currentMode === 'AAS') {
+                        if (i > 0) showSide = false;
+                        if (i === 0 && constStep < 1) showAngle = false;
+                        if (i === 2 && constStep < 2) showAngle = false;
+                        if (i === 1) showAngle = false;
+                    }
                 }
-                if (currentMode !== 'QUEST') {
+
+                // Side Labels
+                if (showSide) {
+                    const midX = (p.x + next.x) / 2, midY = (p.y + next.y) / 2;
+                    const dx = next.x - p.x;
+                    const dy = next.y - p.y;
+                    let nx = -dy;
+                    let ny = dx;
+                    const mag = Math.sqrt(nx*nx + ny*ny) || 1;
+                    nx /= mag;
+                    ny /= mag;
+                    const midToCx = cx - midX;
+                    const midToCy = cy - midY;
+                    const dot = nx * midToCx + ny * midToCy;
+                    if (dot > 0) { nx = -nx; ny = -ny; }
+                    if (!isBlue && !isAnimating && !isComplete && i === 0) { nx = 0; ny = 1; }
+                    const offset = (!isBlue && !isAnimating && !isComplete) ? 20 : 55;
+                    drawUprightLabel(Math.round(dist(p, next)), midX + nx*offset, midY + ny*offset);
+                }
+
+                // Angle Labels
+                const adx = p.x - cx, ady = p.y - cy;
+                const alen = Math.sqrt(adx*adx + ady*ady);
+                if (showAngle && currentMode !== 'SSS' && currentMode !== 'RHS') {
+                    // Positioned tighter to the vertex in the interior
+                    drawUprightLabel(angs[i]+"°", p.x - (adx/alen)*22, p.y - (ady/alen)*22);
+                }
+
+                // Vertex Numbers
+                const vdx = p.x - cx, vdy = p.y - cy;
+                const vlen = Math.sqrt(vdx*vdx + vdy*vdy);
+                // Positioned tighter to the vertex on the exterior
+                drawUprightLabel((i+1).toString(), p.x + (vdx/vlen)*18, p.y + (vdy/vlen)*18, isBlue ? '#60a5fa' : '#a78bfa');
+
+                if (currentMode !== 'QUEST' && showAngle) {
                     ctx.beginPath();
                     const sA = Math.atan2(prev.y-p.y, prev.x-p.x);
                     const eA = Math.atan2(next.y-p.y, next.x-p.x);
-                    ctx.arc(p.x, p.y, 18, sA, eA);
+                    ctx.arc(p.x, p.y, 14, sA, eA);
                     ctx.strokeStyle = isBlue ? '#3b82f688' : '#a855f788'; ctx.lineWidth = 2; ctx.stroke();
                 }
             });
@@ -635,6 +750,7 @@
             ctx.save(); ctx.translate(startX, horizonY);
             const pts = getConstPoints();
             const p1 = pts[0], p2 = pts[1], p3 = pts[2];
+            
             if (currentMode === 'SSS') {
                 ctx.setLineDash([]); ctx.lineWidth = 3; ctx.shadowBlur = 15; ctx.shadowColor = '#a855f7'; ctx.strokeStyle = '#a855f7';
                 if (constStep >= 1) { 
@@ -647,13 +763,24 @@
                 }
                 ctx.shadowBlur = 0;
             }
+            
             ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 4;
             ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            
             if (constStep >= 1 || currentMode !== 'SSS') {
                 ctx.strokeStyle = '#a855f7';
-                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+                if ((currentMode === 'ASA' || currentMode === 'AAS') && constStep === 1) {
+                    ctx.setLineDash([10, 5]);
+                    ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+                    ctx.setLineDash([]);
+                } else {
+                    ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+                }
             }
+            
+            drawMetrics(pts, false, 1, 1, 0);
+            
             ctx.restore();
         }
 
