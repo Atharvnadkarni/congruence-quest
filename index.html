@@ -296,7 +296,10 @@
         function resize() {
             if (document.getElementById('gameContainer').classList.contains('hidden')) return;
             canvas.width = wrapper.clientWidth; canvas.height = wrapper.clientHeight;
-            horizonY = canvas.height * 0.75; startX = canvas.width * 0.3; endX = canvas.width * 0.75;
+            // Baseline lowered to prevent HUD clipping
+            horizonY = canvas.height * 0.75; 
+            startX = canvas.width * 0.25; 
+            endX = canvas.width * 0.75;
             initLevel();
         }
 
@@ -327,7 +330,8 @@
         function initQuestLevel() {
             isPossible = Math.random() > 0.4;
             superSlider.value = 0; rotSlider.value = 0;
-            const size = Math.min(canvas.width, canvas.height) * 0.32; 
+            // Reduced size multiplier to 0.22 for better fit in split-screen mode
+            const size = Math.min(canvas.width, canvas.height) * 0.22; 
             const base = genTri(size, level);
             player.points = base;
             player.rotation = 0; player.scaleX = 1; player.scaleY = 1; player.currentX = startX;
@@ -343,10 +347,11 @@
             
             document.getElementById('constSlider1Group').classList.remove('hidden');
             document.getElementById('constSlider2Group').classList.add('hidden');
-            document.getElementById('constSlider3Group').classList.remove('hidden');
+            document.getElementById('constSlider3Group').classList.add('hidden');
             
-            const scaleMult = (currentMode === 'SSS' || currentMode === 'SAS' || currentMode === 'ASA' || currentMode === 'AAS') ? 0.45 : 0.3;
-            const size = Math.min(canvas.width, canvas.height) * (scaleMult + (level / 100));
+            // Reduced scaling for construction modes
+            const scaleMult = (currentMode === 'SSS' || currentMode === 'SAS' || currentMode === 'ASA' || currentMode === 'AAS') ? 0.32 : 0.22;
+            const size = Math.min(canvas.width, canvas.height) * (scaleMult + (level / 150));
             const base = genTri(size, level);
             target.points = base; target.rotation = 0; target.scaleX = 1; target.scaleY = 1; 
             target.x = endX; target.y = horizonY;
@@ -375,7 +380,7 @@
                     targetP2 = angs[0];      
                     targetP3 = angs[1];      
                     setupSliders("Set Base Side", "Set Left Angle", 50, 750, 0, 180);
-                    document.getElementById('constLabel3').innerText = "Set Right Angle";
+                    document.getElementById('constActionBtn').innerText = "Set Right Angle";
                     document.getElementById('constActionBtn').innerText = "LOCK BASE SIDE";
                     break;
                 case 'AAS':
@@ -719,14 +724,12 @@
                 const adx = p.x - cx, ady = p.y - cy;
                 const alen = Math.sqrt(adx*adx + ady*ady);
                 if (showAngle && currentMode !== 'SSS' && currentMode !== 'RHS') {
-                    // Positioned tighter to the vertex in the interior
                     drawUprightLabel(angs[i]+"°", p.x - (adx/alen)*22, p.y - (ady/alen)*22);
                 }
 
                 // Vertex Numbers
                 const vdx = p.x - cx, vdy = p.y - cy;
                 const vlen = Math.sqrt(vdx*vdx + vdy*vdy);
-                // Positioned tighter to the vertex on the exterior
                 drawUprightLabel((i+1).toString(), p.x + (vdx/vlen)*18, p.y + (vdy/vlen)*18, isBlue ? '#60a5fa' : '#a78bfa');
 
                 if (currentMode !== 'QUEST' && showAngle) {
