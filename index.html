@@ -108,6 +108,7 @@
 </head>
 <body class="text-slate-200">
 
+    <!-- Splash Screen -->
     <div id="titleScreen" class="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center p-8 text-center overflow-y-auto">
         <div class="mb-6 space-y-4 max-w-2xl text-center text-white">
             <h1 class="text-4xl lg:text-6xl font-black tracking-tighter text-white uppercase italic text-center">
@@ -296,10 +297,7 @@
         function resize() {
             if (document.getElementById('gameContainer').classList.contains('hidden')) return;
             canvas.width = wrapper.clientWidth; canvas.height = wrapper.clientHeight;
-            // Baseline lowered to prevent HUD clipping
-            horizonY = canvas.height * 0.75; 
-            startX = canvas.width * 0.25; 
-            endX = canvas.width * 0.75;
+            horizonY = canvas.height * 0.75; startX = canvas.width * 0.25; endX = canvas.width * 0.75;
             initLevel();
         }
 
@@ -330,7 +328,6 @@
         function initQuestLevel() {
             isPossible = Math.random() > 0.4;
             superSlider.value = 0; rotSlider.value = 0;
-            // Reduced size multiplier to 0.22 for better fit in split-screen mode
             const size = Math.min(canvas.width, canvas.height) * 0.22; 
             const base = genTri(size, level);
             player.points = base;
@@ -349,7 +346,6 @@
             document.getElementById('constSlider2Group').classList.add('hidden');
             document.getElementById('constSlider3Group').classList.add('hidden');
             
-            // Reduced scaling for construction modes
             const scaleMult = (currentMode === 'SSS' || currentMode === 'SAS' || currentMode === 'ASA' || currentMode === 'AAS') ? 0.32 : 0.22;
             const size = Math.min(canvas.width, canvas.height) * (scaleMult + (level / 150));
             const base = genTri(size, level);
@@ -380,7 +376,7 @@
                     targetP2 = angs[0];      
                     targetP3 = angs[1];      
                     setupSliders("Set Base Side", "Set Left Angle", 50, 750, 0, 180);
-                    document.getElementById('constActionBtn').innerText = "Set Right Angle";
+                    document.getElementById('constLabel3').innerText = "Set Right Angle";
                     document.getElementById('constActionBtn').innerText = "LOCK BASE SIDE";
                     break;
                 case 'AAS':
@@ -456,6 +452,26 @@
             } else {
                 if (Math.abs(p2Val - targetP2) < tol) { startSuperpositionAnim(100 + level * 10); } 
                 else { failStrike('constActionBtn'); }
+            }
+        }
+
+        function handleConfirm() {
+            if (isComplete || isAnimating) return;
+            const score = calcScore();
+            if (isPossible && score >= 95) {
+                startSuperpositionAnim(100 + level * 5);
+            } else {
+                failStrike('confirmBtn');
+            }
+        }
+
+        function handleReject() {
+            if (isComplete || isAnimating) return;
+            if (!isPossible) {
+                totalScore += (150 + level * 5);
+                showWinScreen();
+            } else {
+                failStrike('rejectBtn');
             }
         }
 
